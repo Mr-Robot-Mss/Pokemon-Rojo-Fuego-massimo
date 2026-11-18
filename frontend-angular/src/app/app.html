@@ -1,0 +1,124 @@
+<div class="game-shell">
+  <header class="topbar">
+    <div class="logo"><span class="pokeball" aria-hidden="true"></span><div>POKÉMON ROJO<strong>MASSIMO</strong></div></div>
+    <nav class="topnav" aria-label="Navegación principal">
+      @for (item of vistas; track item.id) {
+        <button type="button" [class.active]="vista() === item.id" (click)="seleccionarVista(item.id)"><span>{{item.icono}}</span> {{item.texto}}</button>
+      }
+    </nav>
+  </header>
+
+  <div class="layout">
+    <aside class="left-column">
+      <section class="panel trainer-panel">
+        <h2>Entrenador</h2>
+        <div class="panel-inner">
+          <app-trainer-summary [jugador]="jugador()" />
+          <label for="jugador-select" class="label">Entrenador activo</label>
+          <select id="jugador-select" [(ngModel)]="jugadorId" (ngModelChange)="seleccionarJugador()">
+            <option [ngValue]="0">Seleccionar entrenador</option>
+            @for (j of jugadores(); track j.id) { <option [ngValue]="j.id">{{j.nombre}} (#{{j.id}})</option> }
+          </select>
+          <div class="trainer-counters"><div><span>⭐</span><small>Experiencia · Nv. {{jugador()?.nivel ?? 5}}</small><strong>{{jugador()?.experiencia ?? '—'}}</strong></div><div><span>🪙</span><small>Monedas</small><strong>{{monedas() ?? '—'}}</strong></div></div>
+          @if (jugador(); as j) {
+            <div class="xp-progression">
+              <div class="xp-label"><span>Progreso del nivel {{j.nivel}}</span><b>{{j.xp_nivel ?? 0}} / {{j.xp_siguiente_nivel ?? 0}} EXP</b></div>
+              <div class="xp-track"><div [style.width.%]="(j.xp_siguiente_nivel ?? 0) > 0 ? (j.xp_nivel ?? 0) * 100 / (j.xp_siguiente_nivel ?? 1) : 100"></div></div>
+              <small>{{j.siguiente_evolucion_nivel ? 'Próxima evolución: nivel ' + j.siguiente_evolucion_nivel : '¡Evolución final alcanzada!'}}</small>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="panel pokemon-panel"><h2>Mi Pokémon</h2><div class="panel-inner">
+        <div class="pokemon-card">
+          @if (sprite(pokemonDeJugador(),'front'); as imagen) { <img [src]="imagen" [alt]="pokemonDeJugador()?.nombre" /> }
+          <div><strong>{{pokemonDeJugador()?.nombre || 'Sin Pokémon'}}</strong><span class="element-type">{{pokemonDeJugador()?.tipo || '—'}}</span><small>PS: {{combate()?.estado === 'activo' ? combate()?.ps_jugador : pokemonDeJugador()?.vida ?? '—'}} / {{combate()?.estado === 'activo' ? combate()?.ps_max_jugador : pokemonDeJugador()?.vida ?? '—'}}</small></div>
+        </div>
+        <div class="hp-bar"><div [style.width.%]="salud(combate()?.estado === 'activo' ? (combate()?.ps_jugador ?? 0) : (pokemonDeJugador()?.vida ?? 0),combate()?.estado === 'activo' ? (combate()?.ps_max_jugador ?? 1) : (pokemonDeJugador()?.vida ?? 1))"></div></div>
+        @if (pokemonDeJugador()?.estadisticas_base; as stats) {
+          <div class="base-stats" aria-label="Estadísticas base de Pokémon">
+            <span>ATQ <b>{{stats['ataque']}}</b></span><span>DEF <b>{{stats['defensa']}}</b></span>
+            <span>AT. ESP <b>{{stats['ataque_especial']}}</b></span><span>DEF. ESP <b>{{stats['defensa_especial']}}</b></span>
+            <span>VEL <b>{{stats['velocidad']}}</b></span>
+          </div>
+        }
+      </div></section>
+
+      <section class="panel log-panel" aria-label="Registro del combate">
+        <h2>📜 Registro del combate <small>· turnos y movimientos</small></h2>
+        <div class="panel-inner log-scroll"><app-battle-log [entries]="bitacora()" /></div>
+      </section>
+    </aside>
+
+    <main class="center-column">
+      @if (vista() === 'jugar') {
+        <section class="panel battle-panel">
+          <h2 class="battle-title"><span class="mini-pokeball">◉</span> Batalla Pokémon <span class="mini-pokeball">◉</span></h2>
+          <div class="battle-stage">
+            <div class="status-box enemy"><strong>{{pokemonRival()?.nombre || 'Pokémon salvaje'}}</strong><span>Nv. {{combate()?.nivel_enemigo ?? 5}}</span><div class="hp-with-label"><b>PS</b><div class="hp-bar"><div [style.width.%]="salud(combate()?.ps_enemigo ?? pokemonRival()?.vida ?? 0,combate()?.ps_max_enemigo ?? pokemonRival()?.vida ?? 1)"></div></div></div><small>{{combate()?.ps_enemigo ?? pokemonRival()?.vida ?? '—'}} / {{combate()?.ps_max_enemigo ?? pokemonRival()?.vida ?? '—'}}</small></div>
+            <div class="enemy-ground"></div>
+            @if (sprite(pokemonRival(),'front'); as imagen) { <img class="enemy-pokemon" [class.hit]="animateEnemy()" [src]="imagen" [alt]="pokemonRival()?.nombre" /> }
+            <div class="player-ground"></div>
+            @if (sprite(pokemonDeJugador(),'back'); as imagen) { <img class="player-pokemon" [class.hit]="animatePlayer()" [src]="imagen" [alt]="pokemonDeJugador()?.nombre" /> }
+            <div class="status-box player"><strong>{{combate()?.pokemon_jugador?.nombre || pokemonDeJugador()?.nombre || 'Tu Pokémon'}}</strong><span>Nv. {{jugador()?.nivel ?? 5}}</span><div class="hp-with-label"><b>PS</b><div class="hp-bar"><div [style.width.%]="salud(combate()?.ps_jugador ?? pokemonDeJugador()?.vida ?? 0,combate()?.ps_max_jugador ?? pokemonDeJugador()?.vida ?? 1)"></div></div></div><small>{{combate()?.ps_jugador ?? pokemonDeJugador()?.vida ?? '—'}} / {{combate()?.ps_max_jugador ?? pokemonDeJugador()?.vida ?? '—'}}</small></div>
+          </div>
+          <div class="dialogue" role="status">{{mensaje()}}</div>
+          <div class="battle-actions">
+            <div class="battle-prompt"><strong>¿Qué hará</strong><strong>{{pokemonDeJugador()?.nombre || 'tu Pokémon'}}?</strong><small>Turno {{combate()?.turno ?? '—'}}</small></div>
+            @if (combate()?.estado === 'activo') {
+              <div class="moves">
+                @for (mov of combate()?.movimientos ?? []; track mov.nombre) {
+                  <button type="button" class="move" [class.fire]="mov.tipo === 'Fuego'" [disabled]="ejecutando()" (click)="atacar(mov.nombre)"><span>{{mov.tipo === 'Fuego' ? '🔥' : mov.tipo === 'Agua' ? '💧' : mov.tipo === 'Planta' ? '🌿' : '⚔️'}}</span><span><strong>{{mov.nombre}}</strong><small>{{mov.tipo}} · Potencia {{mov.potencia}}</small></span><b>ATACAR</b></button>
+                }
+              </div>
+            } @else {
+              <div class="start-battle">
+                <div class="random-encounter">🎲 El rival será elegido al azar entre 10 Pokémon salvajes.</div>
+                <button [disabled]="!jugadorId || cargando() || !apiOnline()" (click)="iniciarCombate()">{{cargando() ? 'Preparando...' : '⚔️ Iniciar combate'}}</button>
+                @if (combate() && combate()?.estado !== 'activo') { <span class="battle-result">Resultado: {{combate()?.estado}}</span> }
+              </div>
+            }
+          </div>
+        </section>
+      } @else if (vista() === 'entrenadores') {
+        <section class="panel content-panel"><h2>👤 Entrenadores</h2><div class="content-inner"><p>Crea un entrenador o elige uno que ya exista en PostgreSQL.</p><div class="form-grid"><label>Nombre del entrenador<input [(ngModel)]="nombreNuevo" placeholder="Ej. Massimo" maxlength="50" /></label><label>Pokémon inicial<select [(ngModel)]="pokemonInicialId">@for (p of iniciales(); track p.id) { <option [ngValue]="p.id">{{p.nombre}}</option> }</select></label><button [disabled]="cargando()" (click)="crearJugador()">Crear entrenador</button></div><h3>Entrenadores existentes</h3><div class="trainer-list">@for (j of jugadores(); track j.id) { <button (click)="jugadorId=j.id; seleccionarJugador(); seleccionarVista('jugar')"><b>{{j.nombre}}</b><small>ID {{j.id}}</small></button> } @empty { <p>No se cargaron entrenadores todavía.</p> }</div></div></section>
+      } @else if (vista() === 'estadisticas') {
+        <app-stats-view [stats]="estadisticas()" [activity]="actividad()" (refresh)="refrescarMonitor()" />
+      } @else if (vista() === 'topicos') {
+        <app-topics-view [overview]="overview()" [error]="monitorError()" (refresh)="refrescarMonitor()" />
+      }
+    </main>
+
+    <aside class="right-column">
+      <section class="panel stats-panel"><h2>▥ Estadísticas Kafka</h2><div class="panel-inner">
+        <div class="connection" [class.online]="overview()?.available"><span>●</span> Kafka: {{overview()?.available ? 'Conectado' : 'Sin verificar'}} <b>{{overview()?.available ? overview()?.brokers?.length : '—'}} Brokers</b></div>
+        <div class="stat-line"><span>🏆 Victorias</span><strong>{{estadisticas()?.victorias ?? '—'}}</strong></div>
+        <div class="stat-line"><span>☠️ Derrotas</span><strong>{{estadisticas()?.derrotas ?? '—'}}</strong></div>
+        <div class="stat-line"><span>⚔️ Ataques del jugador</span><strong>{{estadisticas()?.ataques_jugador ?? '—'}}</strong></div>
+        <div class="stat-line"><span>🗡️ Ataques del enemigo</span><strong>{{estadisticas()?.ataques_enemigo ?? '—'}}</strong></div>
+        <div class="stat-line"><span>💥 Daño causado</span><strong>{{estadisticas()?.dano_causado ?? '—'}}</strong></div>
+        <div class="stat-line"><span>🛡️ Daño recibido</span><strong>{{estadisticas()?.dano_recibido ?? '—'}}</strong></div>
+        <small class="updated">Actualización: {{estadisticas()?.actualizado_en ? (estadisticas()?.actualizado_en | date:'short') : 'Sin datos'}}</small>
+      </div></section>
+      <section class="panel topics-panel"><h2>◉ Kafka (Tiempo real)</h2><div class="panel-inner"><div class="topic-card purple"><strong>pokemon.events</strong><span>Particiones: {{overview()?.topics?.[0]?.partitions?.length ?? '—'}}<br/>Eventos visibles: {{cantidadEventos('pokemon.events')}}</span></div><div class="topic-card blue"><strong>pokemon.battles</strong><span>Particiones: {{overview()?.topics?.[1]?.partitions?.length ?? '—'}}<br/>Eventos visibles: {{cantidadEventos('pokemon.battles')}}</span></div><small class="muted">Últimos registros visibles del Outbox, no el total de mensajes retenidos.</small><button class="subtle-button" (click)="seleccionarVista('topicos')">Ver monitoreo completo</button></div></section>
+
+    </aside>
+  </div>
+  @if (evolucion(); as evo) {
+    <div class="evolution-overlay" role="status" aria-live="polite">
+      <div class="evolution-card">
+        <span class="evolution-light">✧ ¡EVOLUCIÓN! ✧</span>
+        <div class="evolution-pair">
+          <img [src]="evo.spriteAnterior" [alt]="evo.anterior" class="evolution-old" />
+          <span class="evolution-arrow">✦</span>
+          <img [src]="evo.spriteNuevo" [alt]="evo.nuevo" class="evolution-new" />
+        </div>
+        <strong>¡{{evo.anterior}} evolucionó a {{evo.nuevo}}!</strong>
+        <small>¡Alcanzaste el nivel {{evo.nivel}}!</small>
+        <button type="button" (click)="evolucion.set(null)">Continuar</button>
+      </div>
+    </div>
+  }
+  <footer class="footer"><span [class.ok]="apiOnline()">● FastAPI {{apiOnline() ? 'conectado' : 'no disponible'}}</span><span>POKÉMON ROJO MASSIMO · Angular + FastAPI + Kafka</span><span>Vista {{vista()}}</span></footer>
+</div>

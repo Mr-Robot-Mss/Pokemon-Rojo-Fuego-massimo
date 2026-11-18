@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice" shape-rendering="crispEdges">
+<rect width="960" height="540" fill="#91d5f2"/>
+<rect x="0" y="190" width="960" height="350" fill="#a7d977"/>
+<path d="M0 199L130 90 225 179 365 80 520 201 661 113 790 199 910 110 960 180 960 310 0 310Z" fill="#83b9b4"/>
+<path d="M0 238L165 165 290 245 425 132 565 226 690 155 834 233 960 182 960 310H0Z" fill="#64a5a0"/>
+<path d="M0 278L140 255 235 281 350 236 480 280 625 232 784 277 960 247V540H0Z" fill="#6ca851"/>
+<path d="M0 325L100 300 215 330 340 300 465 333 570 308 710 337 820 302 960 326V540H0Z" fill="#84c666"/>
+<rect x="0" y="353" width="960" height="187" fill="#9ed377"/>
+<path d="M0 460L120 427 285 451 410 429 555 455 735 423 960 464V540H0Z" fill="#8bc768"/>
+<path d="M0 506L180 470 350 510 560 471 720 500 960 463V540H0Z" fill="#b4d581"/>
+<g fill="#ffffff" opacity=".88"><rect x="225" y="52" width="65" height="13"/><rect x="238" y="42" width="43" height="11"/><rect x="600" y="70" width="94" height="12"/><rect x="616" y="58" width="66" height="13"/></g>
+<g stroke="#583f30" stroke-width="25"><path d="M88 0V295"/><path d="M864 0V288"/><path d="M942 0V250"/></g>
+<g fill="#366f43"><circle cx="94" cy="45" r="120"/><circle cx="33" cy="88" r="96"/><circle cx="172" cy="66" r="93"/><circle cx="855" cy="33" r="115"/><circle cx="942" cy="90" r="92"/></g>
+<g fill="#4b9954"><circle cx="26" cy="50" r="69"/><circle cx="129" cy="15" r="94"/><circle cx="920" cy="20" r="77"/><circle cx="792" cy="43" r="70"/></g>
+<g fill="#267e49"><rect x="0" y="314" width="170" height="35"/><rect x="755" y="313" width="205" height="34"/><rect x="0" y="349" width="115" height="24"/><rect x="827" y="342" width="133" height="24"/></g>
+<g fill="#72b94c"><rect x="10" y="310" width="115" height="13"/><rect x="775" y="305" width="165" height="12"/></g>
+<g fill="#e5edc5"><rect x="396" y="391" width="63" height="7"/><rect x="507" y="410" width="75" height="7"/><rect x="165" y="448" width="57" height="6"/><rect x="707" y="451" width="84" height="7"/></g>
+</svg>

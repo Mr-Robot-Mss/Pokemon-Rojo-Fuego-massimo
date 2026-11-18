@@ -1,0 +1,319 @@
+:host { display:block; width:100%; min-width:0; }
+* { box-sizing:border-box; }
+.game-shell { width:100%; min-height:100dvh; background:#f5e9d4; color:#172039; font-family:'Trebuchet MS',Arial,sans-serif; display:flex; flex-direction:column; overflow-x:clip; }
+button,input,select { font:inherit; }
+button { cursor:pointer; }
+.topbar { flex:0 0 auto; min-height:84px; padding:12px clamp(12px,2vw,28px); display:flex; align-items:center; gap:clamp(12px,2vw,40px); background:linear-gradient(100deg,#9f1524,#d21d31 60%,#b01326); color:#fff; border-bottom:5px solid #791522; box-shadow:0 3px 0 #eebca3; }
+.logo { flex:0 0 auto; display:flex; align-items:center; gap:12px; font-size:clamp(15px,1.35vw,25px); font-weight:1000; line-height:1.03; letter-spacing:.5px; text-shadow:2px 3px #580c16; white-space:nowrap; }
+.logo strong { display:block; text-align:center; }
+.pokeball { position:relative; flex:0 0 52px; width:52px; height:52px; border:4px solid #182336; background:linear-gradient(#e52939 0 46%,#182336 47% 54%,#fbf8ec 55%); border-radius:50%; box-shadow:2px 3px #791523; }
+.pokeball:after { content:''; position:absolute; left:15px; top:16px; width:15px; height:15px; background:#fafaf6; border:4px solid #152038; border-radius:50%; }
+.topnav { display:flex; flex:1; align-items:center; justify-content:space-around; gap:4px; padding:6px; border:2px solid #e4b999; border-radius:12px; background:#fff6e7; min-width:0; }
+.topnav button { border:0; background:transparent; border-radius:9px; color:#18243d; padding:clamp(7px,1vw,13px); font-size:clamp(11px,.95vw,16px); font-weight:900; white-space:nowrap; min-width:0; }
+.topnav button:hover,.topnav button.active { background:#bd1729; color:#fff; }
+.layout { flex:1; width:100%; max-width:1900px; margin:auto; padding:clamp(8px,.8vw,15px); display:grid; grid-template-columns:minmax(225px,20fr) minmax(0,54fr) minmax(255px,26fr); align-items:start; gap:clamp(8px,.8vw,14px); }
+.left-column,.right-column,.center-column { min-width:0; max-width:100%; display:flex; flex-direction:column; gap:12px; }
+.panel { min-width:0; background:#fff8e9; border:2px solid #911824; border-radius:13px; box-shadow:0 3px 0 #dcbfa9; overflow:hidden; }
+.panel h2 { margin:0; padding:12px 15px; background:linear-gradient(#bf192c,#9f1122); color:white; font-size:clamp(15px,1.25vw,21px); font-weight:900; line-height:1.15; }
+.panel-inner { padding:clamp(10px,1vw,15px); }
+.label { display:block; margin:8px 0 5px; font-size:12px; font-weight:800; color:#67432b; }
+select,input { width:100%; max-width:100%; border-radius:8px; border:2px solid #cfb297; background:#fff9ed; padding:11px; color:#1b2944; }
+.trainer-counters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:12px; }
+.trainer-counters>div { min-width:0; padding:9px 4px; border:2px solid #dfc4a4; border-radius:10px; display:flex; flex-direction:column; align-items:center; gap:3px; }
+.trainer-counters span {font-size:23px}.trainer-counters small { font-size:11px; }.trainer-counters strong {font-size:15px}
+.pokemon-card { display:flex; align-items:center; gap:10px; min-width:0; }
+.pokemon-card img { flex:0 0 auto; width:clamp(65px,5.9vw,105px); height:clamp(65px,5.9vw,105px); object-fit:contain; image-rendering:pixelated; }
+.pokemon-card>div { display:flex; flex-direction:column; gap:8px; min-width:0; }.pokemon-card strong {font-size:clamp(15px,1.2vw,20px)}.pokemon-card small {font-size:12px}
+.element-type { align-self:flex-start; padding:4px 10px; background:#dc4529; color:#fff; border-radius:14px; font-size:11px; font-weight:900; }
+.hp-bar { flex:1; height:14px; border:3px solid #273348; background:#515964; border-radius:15px; overflow:hidden; min-width:20px; }.hp-bar>div { width:100%; height:100%; background:linear-gradient(90deg,#14b34d,#65eb81); transition:width .4s ease; }
+.pokemon-panel .hp-bar { margin-top:10px; }
+.side-menu { padding:10px; display:flex; flex-direction:column; gap:5px; }
+.side-menu button { padding:12px 13px; border:0; border-radius:8px; text-align:left; background:#fff0d9; color:#19263c; font-weight:900; }
+.side-menu button:hover,.side-menu button.selected { color:#fff; background:#be1830; }
+.battle-title { text-align:center; }
+.battle-stage { height:clamp(280px,30.5vw,505px); position:relative; overflow:hidden; margin:7px 7px 0; border-radius:9px; border:3px solid #7fbd90; background:#8dd4e9 url('/scenes/forest.svg') center / cover no-repeat; image-rendering:auto; }
+.enemy-ground,.player-ground { position:absolute; z-index:1; border-radius:50%; background:radial-gradient(ellipse,#4f8c497d 35%,#49833944 70%,transparent 75%); }
+.enemy-ground { width:37%; height:13%; top:60%; right:10%; }.player-ground {width:42%;height:18%;left:8%;bottom:5%;}
+.enemy-pokemon,.player-pokemon { position:absolute; z-index:2; object-fit:contain; image-rendering:pixelated; filter:drop-shadow(2px 6px 1px #31533e55); transition:transform .12s; }
+.enemy-pokemon { width:clamp(82px,13vw,220px); height:clamp(82px,13vw,220px); right:18%; top:22%; }
+.player-pokemon { width:clamp(110px,17vw,265px); height:clamp(110px,17vw,265px); left:12%; bottom:2%; }
+.enemy-pokemon.hit,.player-pokemon.hit { animation:impact .14s 2; }
+@keyframes impact { 50% {transform:translateX(8px);filter:brightness(2)} }
+.status-box { position:absolute; z-index:3; background:#fff9e8; border:3px solid #27334f; box-shadow:3px 4px #626575; border-radius:12px; width:clamp(155px,19vw,280px); padding:clamp(8px,1vw,15px); display:grid; grid-template-columns:1fr auto; gap:5px; font-size:clamp(12px,1vw,16px); }
+.status-box.enemy { left:4%; top:6%; }.status-box.player { right:3%; bottom:7%; }.status-box .hp-with-label { grid-column:1/-1; display:flex; align-items:center; gap:7px; }.hp-with-label b {font-size:11px;color:#c9a400}.status-box small {grid-column:1/-1;text-align:right;font-weight:900}
+.dialogue { margin:8px 7px; padding:clamp(13px,1.4vw,20px); min-height:75px; border:5px double #27234e; border-radius:11px; box-shadow:2px 3px #bab1c4; background:#fffdf5; font-size:clamp(15px,1.25vw,20px); font-weight:900; }
+.battle-actions { display:grid; grid-template-columns:minmax(120px,25fr) minmax(0,75fr); gap:10px; padding:8px; }
+.battle-prompt { display:flex; flex-direction:column; justify-content:center; gap:9px; padding:clamp(10px,1.3vw,20px); border-radius:9px; background:#bd2031; color:white; font-size:clamp(15px,1.15vw,19px); }.battle-prompt small {font-size:11px}
+.moves {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.move { display:flex; align-items:center; gap:9px; min-width:0; border:2px solid #293855; border-radius:9px; background:#fff6e6; padding:clamp(8px,1vw,13px); color:#19253b; text-align:left; }.move.fire{background:#ffe5db;border-color:#d34137}.move:hover{filter:brightness(.95)}.move:disabled{opacity:.60;cursor:default}
+.move>span:first-child{font-size:22px}.move>span:nth-child(2){display:flex;flex-direction:column;min-width:0;gap:3px}.move small{font-size:11px;color:#5a6470}.move b {margin-left:auto;font-size:10px;white-space:nowrap;color:#be2333}
+.start-battle {display:flex;flex-direction:column;justify-content:center;gap:7px;min-width:0}.start-battle label{font-size:12px;font-weight:900}.start-battle button,.form-grid button {border:0;border-radius:8px;background:#be1b2c;color:white;padding:12px;font-weight:900}.start-battle button:disabled,.form-grid button:disabled {opacity:.5;cursor:not-allowed}.battle-result{font-size:13px}
+.connection { display:flex;gap:6px;justify-content:space-between;flex-wrap:wrap;align-items:center; background:#f0e5cf; border-radius:8px; padding:12px 9px; font-size:12px; font-weight:900; margin-bottom:7px; }.connection.online{background:#d1f3cf;color:#246d39}.connection b{margin-left:auto}
+.stat-line {padding:11px 5px;display:flex;gap:8px;align-items:center;justify-content:space-between;border-bottom:1px solid #ddc6ab;font-size:clamp(12px,.95vw,15px);font-weight:700}.stat-line strong {font-size:16px}.updated{display:block;text-align:right;margin-top:12px;font-size:11px;color:#6a696e}
+.topic-card {display:flex;justify-content:space-between;gap:7px;align-items:center;border:2px solid #d6bda0;border-radius:9px;padding:10px 8px;margin:0 0 9px;font-size:11px;}.topic-card strong{padding:10px 7px;border-radius:6px;color:#fff;overflow-wrap:anywhere;}.topic-card.purple strong{background:#973ab8}.topic-card.blue strong{background:#326bcd}.topic-card span{text-align:right;line-height:1.5}.muted{display:block;color:#796d65;font-size:11px;}.subtle-button{border:2px solid #aa1b2f;background:#fffaf0;color:#ac1630;border-radius:8px;padding:9px;font-weight:900;margin-top:10px;}
+.log-scroll {max-height:140px;overflow:auto;}.footer {margin-top:auto;min-height:39px;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 15px;border-top:3px solid #ac2030;background:#fff7e8;color:#5f5160;font-size:11px;font-weight:800}.footer .ok {color:#198342}
+.content-inner{padding:clamp(14px,2vw,26px)}.content-panel {min-height:490px}.content-inner h3{margin-top:23px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.form-grid label{font-size:13px;font-weight:800}.form-grid input,.form-grid select{margin-top:5px}.form-grid button{grid-column:1/-1}.trainer-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px}.trainer-list button{display:flex;flex-direction:column;gap:5px;background:#fff0df;border:1px solid #d8bda0;border-radius:9px;padding:11px;text-align:left}.trainer-list small{color:#74645a}
+@media (max-width:1250px){.layout{grid-template-columns:minmax(185px,27fr) minmax(0,73fr)}.right-column{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}.topbar{flex-wrap:wrap}.topnav{flex:1 1 100%}.battle-stage{height:clamp(300px,40vw,510px)}}
+@media (max-width:760px){.layout{grid-template-columns:minmax(0,1fr)}.left-column,.right-column{grid-column:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}.topnav{overflow-x:auto;justify-content:flex-start}.topnav button{flex:0 0 auto}.battle-stage{height:clamp(275px,65vw,420px)}.status-box{width:clamp(140px,31vw,220px)}.enemy-pokemon{right:13%;top:24%}.player-pokemon{left:10%}}
+@media (max-width:540px){.topbar{padding:11px}.logo{font-size:19px}.pokeball{width:40px;height:40px;flex-basis:40px}.pokeball:after{left:10px;top:10px}.layout{padding:7px}.left-column,.right-column{display:flex;flex-direction:column}.battle-actions{grid-template-columns:minmax(0,1fr)}.moves{grid-template-columns:repeat(2,minmax(0,1fr))}.move{padding:7px;gap:4px}.move b{display:none}.enemy-pokemon{right:7%;top:31%;width:110px;height:110px}.player-pokemon{left:4%;bottom:4%;width:145px;height:145px}.status-box{width:142px;padding:7px}.dialogue{font-size:15px}.footer{flex-wrap:wrap}}
+@media (prefers-reduced-motion:reduce){.enemy-pokemon,.player-pokemon,.hp-bar>div{animation:none!important;transition:none!important}}
+
+/* Encuentros aleatorios; registro fijo debajo del Pokémon */
+.random-encounter{padding:12px;border:2px dashed #cfb297;border-radius:8px;background:#fff6e8;font-size:13px;font-weight:800;line-height:1.5}
+.left-column .log-panel{min-height:0}
+.left-column .log-panel .log-scroll{max-height:none;overflow:visible;padding:10px}
+.left-column .log-panel h2 small{font-weight:500;font-size:11px;opacity:.9}
+@media(max-width:760px){.left-column .log-panel{grid-column:1/-1}}
+
+/* Evolución: overlay independiente. No modifica las pausas de ataque. */
+.xp-progression {margin-top:12px;padding:10px;background:#fff8eb;border:1px solid #c8b196;border-radius:8px}
+.xp-progression small {display:block;margin-top:7px;color:#735642;font-size:11px}
+.xp-label {display:flex;justify-content:space-between;gap:6px;font-size:11px;font-weight:700}
+.xp-track{margin-top:7px;height:8px;border:1px solid #6d4ab0;border-radius:20px;background:#ddccf4;overflow:hidden}
+.xp-track>div{height:100%;background:#8663d1;transition:width .45s ease}
+.base-stats{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.base-stats span{background:#f6e8d1;border:1px solid #dcc39f;border-radius:5px;padding:3px 5px;font-size:10px;white-space:nowrap}
+.evolution-overlay{position:fixed;inset:0;z-index:3000;display:grid;place-items:center;background:rgba(24,12,37,.83);padding:16px;animation:evo-appear .45s ease}
+.evolution-card{width:min(520px,94vw);text-align:center;border:5px solid #c11c34;background:linear-gradient(135deg,#fff0d2,#ffffff,#fce6bf);padding:24px 14px;border-radius:20px;box-shadow:0 0 0 5px #fff5e7,0 0 65px #ffd65e}
+.evolution-card>strong{display:block;font-size:clamp(17px,3vw,26px);margin:14px 0;color:#9f112a;text-shadow:1px 1px #fff}
+.evolution-card>small{display:block;font-size:14px;font-weight:700;color:#4f2f52;margin-bottom:18px}
+.evolution-light{display:block;color:#b01236;letter-spacing:2px;font-size:16px;font-weight:900;animation:evo-glow 1s infinite alternate}
+.evolution-pair{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px auto}
+.evolution-pair img{width:clamp(92px,24vw,145px);height:clamp(92px,24vw,145px);object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 4px 5px #aa698a)}
+.evolution-old{animation:evo-old 2s ease both}
+.evolution-new{animation:evo-new 2.4s ease both}
+.evolution-arrow{font-size:35px;color:#ffae0c;animation:evo-glow .65s infinite alternate}
+.evolution-card button{background:#ad1733;color:#fff;border:0;border-radius:8px;padding:10px 27px;font-weight:800}
+@keyframes evo-appear{from{opacity:0}to{opacity:1}}
+@keyframes evo-glow{from{opacity:.55;filter:brightness(.9)}to{opacity:1;filter:brightness(1.5)}}
+@keyframes evo-old{0%,35%{opacity:1;transform:scale(1)}65%,100%{opacity:.35;transform:scale(.85)}}
+@keyframes evo-new{0%,25%{opacity:.2;transform:scale(.7)}65%{opacity:1;transform:scale(1.13)}100%{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.evolution-overlay *{animation:none!important}}
+
+
+/* ============================================================
+   AJUSTE FINAL: PANEL DE JUEGO EN UNA SOLA PANTALLA (ZOOM 100%)
+   Se modifica SOLO la presentación, no la lógica de ataques.
+   En escritorio el scroll queda dentro del registro de combate.
+   ============================================================ */
+@media (min-width: 1050px) {
+  :host { display: block; height: 100dvh; min-height: 0; overflow: hidden; }
+
+  .game-shell {
+    display: grid;
+    grid-template-rows: 58px minmax(0, 1fr) 26px;
+    width: 100%;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Barra de título compacta: recuperamos espacio útil. */
+  .topbar {
+    min-height: 0;
+    height: 58px;
+    padding: 5px 12px;
+    gap: 13px;
+    flex-wrap: nowrap;
+    border-bottom-width: 3px;
+  }
+  .logo { gap: 8px; font-size: clamp(13px, 1.1vw, 19px); }
+  .pokeball { flex-basis: 39px; width: 39px; height: 39px; border-width: 3px; }
+  .pokeball::after { left: 10px; top: 10px; width: 13px; height: 13px; border-width: 3px; }
+  .topnav { flex: 1 1 auto; min-width: 0; padding: 3px; border-radius: 9px; }
+  .topnav button { padding: 8px 6px; font-size: clamp(10px, .9vw, 14px); }
+
+  /* Siempre tres columnas en escritorio, también entre 1050 y 1250 px.
+     La regla anterior de 1250 px ya no manda Kafka abajo. */
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(205px, 21fr) minmax(0, 54fr) minmax(245px, 25fr);
+    grid-template-rows: minmax(0, 1fr);
+    gap: 9px;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-width: 1900px;
+    margin: 0 auto;
+    padding: 8px 10px;
+    align-items: stretch;
+    overflow: hidden;
+  }
+  .left-column, .center-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    grid-column: auto;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    max-height: 100%;
+    gap: 8px;
+    overflow: hidden;
+  }
+  .panel { flex-shrink: 0; border-radius: 10px; }
+  .panel h2 { padding: 7px 10px; font-size: clamp(13px, 1vw, 16px); line-height: 1.15; }
+  .panel-inner { padding: 8px 9px; }
+
+  /* Entrenador y Pokémon: toda la información, menos espacio vacío. */
+  .trainer-panel, .pokemon-panel { flex: 0 0 auto; }
+  .trainer-panel .panel-inner, .pokemon-panel .panel-inner { padding: 7px 9px; }
+  .label { margin: 5px 0 3px; font-size: 11px; }
+  select, input { min-height: 30px; padding: 5px 8px; border-width: 1px; border-radius: 6px; }
+  .trainer-counters { gap: 6px; margin-top: 7px; }
+  .trainer-counters > div { gap: 1px; padding: 4px 3px; border-width: 1px; border-radius: 6px; }
+  .trainer-counters span { font-size: 17px; }
+  .trainer-counters small { font-size: 10px; text-align: center; }
+  .trainer-counters strong { font-size: 12px; }
+  .xp-progression { margin-top: 7px; padding: 6px 7px; border-radius: 6px; }
+  .xp-label { font-size: 10px; }
+  .xp-track { height: 6px; margin-top: 4px; }
+  .xp-progression small { margin-top: 3px; font-size: 10px; }
+  .pokemon-card { gap: 8px; }
+  .pokemon-card img { width: clamp(48px, 4.4vw, 72px); height: clamp(48px, 4.4vw, 72px); }
+  .pokemon-card > div { gap: 3px; }
+  .pokemon-card strong { font-size: clamp(13px, 1vw, 17px); }
+  .pokemon-card small { font-size: 11px; }
+  .element-type { padding: 2px 7px; font-size: 10px; }
+  .hp-bar { height: 10px; border-width: 2px; }
+  .pokemon-panel .hp-bar { margin-top: 6px; }
+  .base-stats { margin-top: 6px; gap: 3px; }
+  .base-stats span { padding: 2px 3px; font-size: 9px; }
+
+  /* Registro fijo en la columna izquierda. Solo sus mensajes se desplazan. */
+  .left-column .log-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    max-height: 100%;
+    overflow: hidden;
+  }
+  .left-column .log-panel h2 { flex: 0 0 auto; }
+  .left-column .log-panel .log-scroll {
+    flex: 1 1 0;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    padding: 5px 7px;
+    overflow: hidden;
+  }
+  .log-scroll app-battle-log { display: block; height: 100%; min-height: 0; }
+  .left-column .log-panel h2 small { font-size: 9px; }
+
+  /* Escenario crece o se reduce con la altura de la ventana. */
+  .center-column .battle-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    max-height: 100%;
+    overflow: hidden;
+  }
+  .battle-title { flex: 0 0 auto; }
+  .battle-stage {
+    flex: 1 1 0;
+    width: auto;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    margin: 5px 6px 0;
+  }
+  .enemy-pokemon { width: clamp(95px, 12vw, 195px); height: clamp(95px, 12vw, 195px); }
+  .player-pokemon { width: clamp(115px, 15vw, 225px); height: clamp(115px, 15vw, 225px); }
+  .status-box {
+    width: clamp(150px, 16vw, 235px);
+    padding: 6px 8px;
+    gap: 3px;
+    border-width: 2px;
+    border-radius: 8px;
+    font-size: clamp(11px, .92vw, 14px);
+  }
+  .status-box .hp-bar { height: 10px; }
+  .dialogue {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    min-height: 43px;
+    margin: 6px 6px 2px;
+    padding: 6px 11px;
+    border-width: 3px;
+    border-radius: 8px;
+    font-size: clamp(12px, 1vw, 16px);
+    line-height: 1.2;
+  }
+  .battle-actions {
+    flex: 0 0 auto;
+    grid-template-columns: minmax(100px, 25fr) minmax(0, 75fr);
+    gap: 6px;
+    padding: 5px 6px 7px;
+  }
+  .battle-prompt { gap: 3px; padding: 7px 9px; border-radius: 7px; font-size: clamp(12px, 1vw, 16px); }
+  .battle-prompt small { font-size: 10px; }
+  .moves { gap: 5px; }
+  .move { gap: 6px; min-height: 38px; padding: 5px 7px; border-width: 1px; border-radius: 7px; }
+  .move > span:first-child { font-size: 17px; }
+  .move small { font-size: 10px; }
+  .move b { font-size: 9px; }
+  .start-battle { gap: 4px; }
+  .start-battle button { padding: 8px 10px; }
+  .random-encounter { padding: 6px 8px; font-size: 11px; line-height: 1.2; }
+
+  /* Paneles Kafka compactos y visibles junto al combate. */
+  .right-column { grid-column: auto; display: flex; }
+  .right-column .panel-inner { padding: 7px 9px; }
+  .connection { margin-bottom: 5px; padding: 7px; font-size: 11px; }
+  .stat-line { padding: 7px 3px; font-size: clamp(11px, .89vw, 14px); }
+  .stat-line strong { font-size: 13px; }
+  .updated { margin-top: 5px; font-size: 10px; }
+  .topic-card { padding: 6px; margin-bottom: 6px; font-size: 10px; border-width: 1px; border-radius: 7px; }
+  .topic-card strong { padding: 7px 5px; }
+  .muted { font-size: 10px; }
+  .subtle-button { padding: 6px 9px; margin-top: 7px; font-size: 11px; }
+  .footer {
+    height: 26px;
+    min-height: 0;
+    margin-top: 0;
+    padding: 3px 10px;
+    font-size: 10px;
+    border-top-width: 2px;
+  }
+
+  /* Las pestañas con tablas conservan scroll interno, no en el documento. */
+  .center-column > .content-panel,
+  .center-column > app-stats-view,
+  .center-column > app-topics-view {
+    display: block;
+    flex: 1 1 0;
+    min-height: 0;
+    max-height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Pantallas de escritorio menos altas: prioriza el área de combate. */
+@media (min-width:1050px) and (max-height:730px) {
+  .game-shell { grid-template-rows: 50px minmax(0,1fr) 23px; }
+  .topbar { height: 50px; }
+  .panel h2 { padding: 5px 9px; }
+  .layout { padding: 5px 8px; gap: 6px; }
+  .left-column,.right-column,.center-column { gap: 6px; }
+  .trainer-panel .panel-inner,.pokemon-panel .panel-inner { padding: 5px 7px; }
+  .pokemon-card img { width: 48px; height: 48px; }
+  .trainer-counters { margin-top: 4px; }
+  .trainer-counters > div { padding: 2px; }
+  .xp-progression { margin-top: 4px; padding: 4px 6px; }
+  .dialogue { min-height: 36px; margin: 4px 5px 2px; }
+  .battle-actions { padding: 4px 5px 5px; }
+  .move { min-height: 34px; padding: 3px 6px; }
+  .footer { height: 23px; }
+}
+
+/* Tablet / móvil: conserva la disposición fluida y el scroll normal
+   para evitar ocultar información a resoluciones realmente pequeñas. */
+@media (max-width:1049px) {
+  :host { height: auto; overflow: visible; }
+  .game-shell { height: auto; min-height: 100dvh; overflow: visible; }
+  .left-column .log-panel .log-scroll { max-height: 230px; overflow: hidden; padding: 7px; }
+  .log-scroll app-battle-log { display: block; height: 210px; }
+}
